@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <title>Quizz Lei-8080</title>
     <style>
         body {
@@ -178,6 +179,7 @@
     <div class="games" id="gamesMenu" style="display:none;">
       <div class="texto">  
         <h2>Bem-vindo ao Quizz <br> Lei 8080-SUS</h2>
+           <hr>
 
         <img src="./logo_infermagem2.png" width="300px" height="300px" alt="">
     </div>
@@ -1306,16 +1308,28 @@
         function showResults() {
             const quizContainer = document.getElementById('quiz-container');
             const correctAnswersCount = userAnswers.filter(answer => answer.correct).length;
-            quizContainer.innerHTML = `
-                <h2>Resultados</h2>
+            quizContainer.innerHTML = 
+                `<h2>Resultados</h2>
                 <p>Você acertou ${correctAnswersCount} de ${userAnswers.length} perguntas!</p>
-                <ul>
-                    ${userAnswers.map((answer, index) => `
-                        <li>${index + 1}: ${answer.answerText} - ${answer.correct ? 'Correto' : 'Incorreto'}</li>
-                    `).join('')}
-                </ul>
-                <button class="back-button" onclick="backToMenu()">Voltar ao Menu</button>
-            `;
+                <ul>` +
+                userAnswers.map((answer, index) => 
+                    `<li>${index + 1}: ${answer.answerText} - ${answer.correct ? 'Correto' : 'Incorreto'}</li>`
+                ).join('') +
+                `</ul>
+                <button class="back-button" onclick="backToMenu()">Voltar ao Menu</button>`;
+
+            // Verificar se todas as respostas estão corretas e jogar confete
+            if (correctAnswersCount === userAnswers.length) {
+                launchConfetti();
+            }
+        }
+
+        function launchConfetti() {
+            confetti({
+                particleCount: 200,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
         }
 
         function backToMenu() {
