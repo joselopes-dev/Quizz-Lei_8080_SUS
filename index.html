@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizz Lei-8080</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: rgb(252, 233, 236);
+        }
+
+        .front {
+            height: 700px;
+        }
+
+        #startScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+
+        .play-button {
+            padding: 15px 30px;
+            font-size: 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .play-button:hover {
+            background-color: #45a049;
+        }
+
+        .game {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid palevioletred;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            width: 100%;
+            max-width: 100px;
+        }
+
+        .game:hover {
+            transform: scale(1.05);
+        }
+
+        #gameContent {
+            margin-top: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .question {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .answer {
+            display: block;
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .answer:hover {
+            background-color: #f0f0f0;
+        }
+        .correct {
+            background-color: lightgreen;
+        }
+        .incorrect {
+            background-color: lightcoral;
+        }
+        .next-button, .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 200px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        .next-button:hover, .back-button:hover {
+            background-color: #45a049;
+        }
+        .back-button {
+            background-color: #007BFF;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        .games {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            
+        }
+
+        .texto {
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+        }
+        @media (max-width: 600px) {
+            .game {
+                margin: 10px;
+                padding: 15px;
+                font-size: 18px;
+            }
+            .next-button, .back-button {
+                font-size: 16px;
+            }
+            .question {
+                font-size: 18px;
+            }
+
+            img {
+                width: 150px;
+                height: 150px;
+                padding: 0px;
+            }
+
+           h2 {
+            font-size: 20px;
+           } 
+
+           body {
+            padding: 5px;
+           }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tela Inicial -->
+    <div class="front" id="startScreen">
+        <h1>Quizz Lei - 8080 - SUS</h1>
+            <br>
+        <img src="logo_infermagem2.png" width="300px" height="300px" alt="">
+
+        <button class="play-button" onclick="startGame()">PLAY</button>
+     </div>
+    
+    
+   
+    <div class="games" id="gamesMenu" style="display:none;">
+      <div class="texto">  
+        <h2>Bem-vindo ao Quizz <br> Lei 8080-SUS</h2>
+
+        <img src="logo_infermagem2.png" width="300px" height="300px" alt="">
+    </div>
+        <div class="game" onclick="loadGame('quiz1')">Quiz 1:<br> Lei 8080</div>
+        <div class="game" onclick="loadGame('quiz2')">Quiz 2:<br> Lei 8080</div>
+        <div class="game" onclick="loadGame('quiz3')">Quiz 3:<br> Lei 8080</div>
+        <div class="game" onclick="loadGame('quiz4')">Quiz 4:<br> Lei 8080</div>
+        <div class="game" onclick="loadGame('quiz5')">Quiz 5:<br> Lei 8080</div>
+        <div class="game" onclick="loadGame('quiz6')">Quiz 6:<br> Lei 8080</div>
+        <div class="game" onclick="loadGame('quiz7')">Quiz 7:<br> Lei 8080</div>
+        <div class="game" onclick="loadGame('quiz8')">Quiz 8:<br> Lei 8080</div>
+        <div class="game" onclick="loadGame('quiz9')">Quiz 9:<br> Lei 8080</div>
+        <div class="game" onclick="loadGame('quiz10')">Quiz 10:<br> Lei 8080</div>
+    </div>
+    
+    <div id="gameContent"></div>
+
+    <script>
+
+        
+         // Função para iniciar o jogo, ocultar a tela inicial e mostrar o menu de jogos
+         function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gamesMenu').style.display = 'flex';
+        }
+        
+        function loadGame(gameId) {
+            let gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = ''; // Limpa o conteúdo anterior
+
+            // Oculta o menu de jogos ao selecionar um jogo
+            document.getElementById('gamesMenu').style.display = 'none';
+
+            if (gameId === 'quiz1') {
+                gameContent.innerHTML = `
+                    <h2>Quiz 1: Lei 8080</h2>
+                    <div id="quiz-container"></div>
+                    <button class="next-button" onclick="nextQuestion()" disabled>Próxima Pergunta</button>
+                    
+                `;
+                startQuiz(questions1); // Inicia o primeiro quiz
+            } else if (gameId === 'quiz2') {
+                gameContent.innerHTML = `
+                    <h2>Quiz 2: Lei 8080</h2>
+                    <div id="quiz-container"></div>
+                    <button class="next-button" onclick="nextQuestion()" disabled>Próxima Pergunta</button>
+                    
+                `;
+                startQuiz(questions2); // Inicia o segundo quiz
+            } else if (gameId === 'quiz3') {
+                gameContent.innerHTML = `
+                    <h2>Quiz 3: Lei 8080</h2>
+                    <div id="quiz-container"></div>
+                    <button class="next-button" onclick="nextQuestion()" disabled>Próxima Pergunta</button>
+                   
+                `;
+                startQuiz(questions3); // Inicia o terceiro quiz
+            }
+
+         else if (gameId === 'quiz4') {
+                gameContent.innerHTML = `
+                    <h2>Quiz 4: Lei 8080</h2>
+                    <div id="quiz-container"></div>
+                    <button class="next-button" onclick="nextQuestion()" disabled>Próxima Pergunta</button>
+                   
+                `;
+                startQuiz(questions4); // Inicia o terceiro quiz
+            }
+
+            else if (gameId === 'quiz5') {
+                gameContent.innerHTML = `
+                    <h2>Quiz 5: Lei 8080</h2>
+                    <div id="quiz-container"></div>
+                    <button class="next-button" onclick="nextQuestion()" disabled>Próxima Pergunta</button>
+                   
+                `;
+                startQuiz(questions5); // Inicia o terceiro quiz
+            }
+
+            else if (gameId === 'quiz6') {
+                gameContent.innerHTML = `
+                    <h2>Quiz 6: Lei 8080</h2>
+                    <div id="quiz-container"></div>
+                    <button class="next-button" onclick="nextQuestion()" disabled>Próxima Pergunta</button>
+                   
+                `;
+                startQuiz(questions6); // Inicia o terceiro quiz
+            }
+
+            else if (gameId === 'quiz7') {
+                gameContent.innerHTML = `
+                    <h2>Quiz 7: Lei 8080</h2>
+                    <div id="quiz-container"></div>
+                    <button class="next-button" onclick="nextQuestion()" disabled>Próxima Pergunta</button>
+                   
+                `;
+                startQuiz(questions7); // Inicia o terceiro quiz
+            }
+
+            else if (gameId === 'quiz8') {
+                gameContent.innerHTML = `
+                    <h2>Quiz 8: Lei 8080</h2>
+                    <div id="quiz-container"></div>
+                    <button class="next-button" onclick="nextQuestion()" disabled>Próxima Pergunta</button>
+                   
+                `;
+                startQuiz(questions8); // Inicia o terceiro quiz
+            }
+
+            else if (gameId === 'quiz9') {
+                gameContent.innerHTML = `
+                    <h2>Quiz 9: Lei 8080</h2>
+                    <div id="quiz-container"></div>
+                    <button class="next-button" onclick="nextQuestion()" disabled>Próxima Pergunta</button>
+                   
+                `;
+                startQuiz(questions9); // Inicia o terceiro quiz
+            }
+
+            else if (gameId === 'quiz10') {
+                gameContent.innerHTML = `
+                    <h2>Quiz 10: Lei 8080</h2>
+                    <div id="quiz-container"></div>
+                    <button class="next-button" onclick="nextQuestion()" disabled>Próxima Pergunta</button>
+                   
+                `;
+                startQuiz(questions10); // Inicia o terceiro quiz
+            }
+        }
+
+        let currentQuestionIndex = 0;
+        const userAnswers = [];
+
+        const questions1 = [
+        {
+        question: 'Qual é o objetivo da Lei 8080?',
+        answers: [
+            { text: 'Organizar os serviços de saúde', correct: true },
+            { text: 'Criar um sistema de saúde privado', correct: false },
+            { text: 'Aumentar os impostos sobre saúde', correct: false },
+            { text: 'Descentralizar a saúde apenas para estados', correct: false }
+        ]
+    },
+    {
+        question: 'Quando foi sancionada a Lei 8080?',
+        answers: [
+            { text: '1990', correct: true },
+            { text: '1988', correct: false },
+            { text: '1992', correct: false },
+            { text: '1995', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 estabelece que a saúde é um direito de qual grupo?',
+        answers: [
+            { text: 'Todos os cidadãos', correct: true },
+            { text: 'Apenas os trabalhadores', correct: false },
+            { text: 'Cidadãos com doenças crônicas', correct: false },
+            { text: 'Cidadãos de baixa renda', correct: false }
+        ]
+    },
+    {
+        question: 'Qual entidade é responsável pela implementação da Lei 8080?',
+        answers: [
+            { text: 'Ministério da Saúde', correct: true },
+            { text: 'Instituto Nacional de Saúde', correct: false },
+            { text: 'Agência Nacional de Saúde', correct: false },
+            { text: 'Conselho de Saúde', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 foi uma das bases para qual sistema de saúde?',
+        answers: [
+            { text: 'Sistema Único de Saúde (SUS)', correct: true },
+            { text: 'Sistema de Saúde Privado', correct: false },
+            { text: 'Sistema de Saúde Complementar', correct: false },
+            { text: 'Sistema de Saúde Estatal', correct: false }
+        ]
+    },
+    {
+        question: 'Qual é um dos princípios da Lei 8080?',
+        answers: [
+            { text: 'Universalidade', correct: true },
+            { text: 'Exclusividade', correct: false },
+            { text: 'Privatização', correct: false },
+            { text: 'Segregação', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 trata da organização dos serviços de saúde em qual nível?',
+        answers: [
+            { text: 'Nacional', correct: true },
+            { text: 'Regional', correct: false },
+            { text: 'Municipal', correct: false },
+            { text: 'Internacional', correct: false }
+        ]
+    },
+    {
+        question: 'Qual é a finalidade do Sistema Único de Saúde (SUS) segundo a Lei 8080?',
+        answers: [
+            { text: 'Prover saúde para todos', correct: true },
+            { text: 'Prover saúde apenas para quem paga', correct: false },
+            { text: 'Prover saúde apenas para servidores públicos', correct: false },
+            { text: 'Prover saúde apenas para estrangeiros', correct: false }
+        ]
+    },
+    {
+        question: 'A participação da comunidade na gestão do SUS é prevista em qual artigo da Lei 8080?',
+        answers: [
+            { text: 'Artigo 1', correct: false },
+            { text: 'Artigo 4', correct: true },
+            { text: 'Artigo 10', correct: false },
+            { text: 'Artigo 20', correct: false }
+        ]
+    },
+    {
+        question: 'Qual o conceito de "Saúde" segundo a Lei 8080?',
+        answers: [
+            { text: 'Apenas a ausência de doenças', correct: false },
+            { text: 'Um estado de completo bem-estar físico, mental e social', correct: true },
+            { text: 'Um serviço que deve ser pago', correct: false },
+            { text: 'Uma obrigação do Estado', correct: false }
+        ]
+    }
+            // Adicione mais perguntas aqui
+        ];
+
+        const questions2 = [
+        {
+        question: 'Qual a responsabilidade do Sistema Único de Saúde?',
+        answers: [
+            { text: 'Prestar serviços de saúde', correct: true },
+            { text: 'Gerar lucro', correct: false },
+            { text: 'Segregar atendimentos', correct: false },
+            { text: 'Privatizar serviços', correct: false }
+        ]
+    },
+    {
+        question: 'Qual o princípio da equidade segundo a Lei 8080?',
+        answers: [
+            { text: 'Oferecer o mesmo para todos', correct: false },
+            { text: 'Distribuir recursos de forma justa', correct: true },
+            { text: 'Priorizar quem pode pagar', correct: false },
+            { text: 'Ignorar desigualdades', correct: false }
+        ]
+    },
+    {
+        question: 'Qual é a estrutura do SUS?',
+        answers: [
+            { text: 'Descentralizada', correct: true },
+            { text: 'Centralizada', correct: false },
+            { text: 'Privada', correct: false },
+            { text: 'Monopolizada', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 foi criada para assegurar que saúde é:',
+        answers: [
+            { text: 'Um bem público', correct: true },
+            { text: 'Um produto', correct: false },
+            { text: 'Um serviço opcional', correct: false },
+            { text: 'Um privilégio', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 determina que os serviços de saúde devem ser:',
+        answers: [
+            { text: 'Universal', correct: true },
+            { text: 'Restrito', correct: false },
+            { text: 'Limitado', correct: false },
+            { text: 'Opcionais', correct: false }
+        ]
+    },
+    {
+        question: 'Qual o artigo que define a saúde como um direito fundamental?',
+        answers: [
+            { text: 'Artigo 196', correct: true },
+            { text: 'Artigo 198', correct: false },
+            { text: 'Artigo 200', correct: false },
+            { text: 'Artigo 203', correct: false }
+        ]
+    },
+    {
+        question: 'Os serviços de saúde no SUS devem ser organizados de acordo com quais princípios?',
+        answers: [
+            { text: 'Integração e hierarquização', correct: true },
+            { text: 'Descentralização e privatização', correct: false },
+            { text: 'Exclusão e limitação', correct: false },
+            { text: 'Desigualdade e competição', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 estabelece a responsabilidade do Estado em garantir:',
+        answers: [
+            { text: 'Acesso aos serviços de saúde', correct: true },
+            { text: 'Lucro para empresas', correct: false },
+            { text: 'Exclusão de cidadãos', correct: false },
+            { text: 'Concorrência entre serviços', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a importância da participação social no SUS?',
+        answers: [
+            { text: 'Garantir a transparência e controle social', correct: true },
+            { text: 'Limitar a participação popular', correct: false },
+            { text: 'Desestimular a crítica ao sistema', correct: false },
+            { text: 'Priorizar interesses privados', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a função do Conselho de Saúde segundo a Lei 8080?',
+        answers: [
+            { text: 'Fiscalizar e deliberar sobre as ações de saúde', correct: true },
+            { text: 'Gerir serviços privados', correct: false },
+            { text: 'Aumentar tarifas de serviços', correct: false },
+            { text: 'Impôr taxas de saúde', correct: false }
+        ]
+    }
+            // Adicione mais perguntas aqui
+        ];
+
+        const questions3 = [
+        {
+        question: 'O que a Lei 8080 diz sobre a integralidade da atenção à saúde?',
+        answers: [
+            { text: 'Que deve incluir ações de promoção, proteção e recuperação', correct: true },
+            { text: 'Que deve se limitar ao tratamento de doenças', correct: false },
+            { text: 'Que não é necessária', correct: false },
+            { text: 'Que deve ser opcional', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 prevê que o SUS deve prestar atendimento:',
+        answers: [
+            { text: 'Universal e gratuito', correct: true },
+            { text: 'Limitado e com taxa', correct: false },
+            { text: 'Exclusivo para quem paga', correct: false },
+            { text: 'Com restrições', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a abordagem da Lei 8080 em relação à saúde pública?',
+        answers: [
+            { text: 'Focar apenas em hospitais', correct: false },
+            { text: 'Integrar serviços de saúde', correct: true },
+            { text: 'Priorizar serviços privados', correct: false },
+            { text: 'Limitar ações preventivas', correct: false }
+        ]
+    },
+    {
+        question: 'Quem pode participar do controle social na saúde?',
+        answers: [
+            { text: 'Qualquer cidadão', correct: true },
+            { text: 'Apenas profissionais de saúde', correct: false },
+            { text: 'Somente autoridades', correct: false },
+            { text: 'Exclusivamente políticos', correct: false }
+        ]
+    },
+    {
+        question: 'O que a Lei 8080 determina sobre a saúde dos trabalhadores?',
+        answers: [
+            { text: 'Deve ser protegida e promovida', correct: true },
+            { text: 'Não é responsabilidade do SUS', correct: false },
+            { text: 'Deve ser privada', correct: false },
+            { text: 'É opcional', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 destaca a importância de quais ações em saúde?',
+        answers: [
+            { text: 'Ações preventivas', correct: true },
+            { text: 'Apenas tratamentos', correct: false },
+            { text: 'Promoção de serviços privados', correct: false },
+            { text: 'Cobrança de taxas', correct: false }
+        ]
+    },
+    {
+        question: 'Qual é a relação entre saúde e desenvolvimento sustentável na Lei 8080?',
+        answers: [
+            { text: 'Saúde é fundamental para o desenvolvimento', correct: true },
+            { text: 'Saúde é um gasto', correct: false },
+            { text: 'Saúde não influencia o desenvolvimento', correct: false },
+            { text: 'Saúde deve ser tratada separadamente', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 estabelece que a saúde é responsabilidade de quem?',
+        answers: [
+            { text: 'Do Estado e da sociedade', correct: true },
+            { text: 'Somente do governo', correct: false },
+            { text: 'Apenas do setor privado', correct: false },
+            { text: 'Exclusivamente dos cidadãos', correct: false }
+        ]
+    },
+    {
+        question: 'O que a Lei 8080 propõe sobre a regionalização dos serviços de saúde?',
+        answers: [
+            { text: 'Serviços devem ser organizados conforme a realidade local', correct: true },
+            { text: 'Serviços devem ser uniformes em todo o país', correct: false },
+            { text: 'Serviços devem ser privatizados', correct: false },
+            { text: 'Serviços devem ser limitados a grandes cidades', correct: false }
+        ]
+    },
+    {
+        question: 'Qual o impacto da Lei 8080 na saúde mental?',
+        answers: [
+            { text: 'Deve ser incluída na atenção integral', correct: true },
+            { text: 'É irrelevante para o sistema', correct: false },
+            { text: 'Deve ser tratada apenas em clínicas privadas', correct: false },
+            { text: 'Não é uma prioridade', correct: false }
+        ]
+    }
+            // Adicione mais perguntas aqui
+        ];
+
+        const questions4 = [
+        {
+        question: 'Qual é a função dos serviços de saúde pública?',
+        answers: [
+            { text: 'Atender as necessidades da população', correct: true },
+            { text: 'Gerar lucro', correct: false },
+            { text: 'Limitar acesso', correct: false },
+            { text: 'Servir apenas a elites', correct: false }
+        ]
+    },
+    {
+        question: 'Os planos de saúde devem garantir que:',
+        answers: [
+            { text: 'Oferecem serviços complementares ao SUS', correct: true },
+            { text: 'Substituem o SUS', correct: false },
+            { text: 'Podem negar atendimento', correct: false },
+            { text: 'Devem ser exclusivos para ricos', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 garante atendimento à saúde para:',
+        answers: [
+            { text: 'Toda a população', correct: true },
+            { text: 'Apenas pessoas com plano de saúde', correct: false },
+            { text: 'Apenas pessoas de classe alta', correct: false },
+            { text: 'Apenas estrangeiros', correct: false }
+        ]
+    },
+    {
+        question: 'Como deve ser feita a gestão do SUS?',
+        answers: [
+            { text: 'De forma democrática', correct: true },
+            { text: 'De forma privada', correct: false },
+            { text: 'De forma autoritária', correct: false },
+            { text: 'De forma exclusiva', correct: false }
+        ]
+    },
+    {
+        question: 'Quais são as diretrizes do SUS estabelecidas pela Lei 8080?',
+        answers: [
+            { text: 'Descentralização, universalidade e integralidade', correct: true },
+            { text: 'Centralização, exclusividade e limitação', correct: false },
+            { text: 'Privatização, segregação e competição', correct: false },
+            { text: 'Omissão, desinteresse e exclusão', correct: false }
+        ]
+    },
+    {
+        question: 'Qual o papel dos profissionais de saúde no SUS?',
+        answers: [
+            { text: 'Atuar em prol da saúde da população', correct: true },
+            { text: 'Priorizar interesses pessoais', correct: false },
+            { text: 'Desconsiderar as necessidades dos cidadãos', correct: false },
+            { text: 'Focar apenas em tratamentos', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 estabelece que os serviços de saúde devem ser prestados:',
+        answers: [
+            { text: 'Em tempo integral', correct: true },
+            { text: 'Apenas em horários comerciais', correct: false },
+            { text: 'Exclusivamente em hospitais', correct: false },
+            { text: 'Somente mediante pagamento', correct: false }
+        ]
+    },
+    {
+        question: 'O que é promovido pela Lei 8080 em relação à saúde da população?',
+        answers: [
+            { text: 'Promoção de campanhas de prevenção', correct: true },
+            { text: 'Aumento de impostos', correct: false },
+            { text: 'Criação de planos de saúde caros', correct: false },
+            { text: 'Limitação do acesso', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde é considerada um bem:',
+        answers: [
+            { text: 'Coletivo', correct: true },
+            { text: 'Individual', correct: false },
+            { text: 'Privado', correct: false },
+            { text: 'Exclusivo', correct: false }
+        ]
+    },
+    {
+        question: 'O SUS deve ser acessível a:',
+        answers: [
+            { text: 'Todos, independentemente de condição socioeconômica', correct: true },
+            { text: 'Apenas quem pode pagar', correct: false },
+            { text: 'Exclusivamente a servidores públicos', correct: false },
+            { text: 'Somente a imigrantes', correct: false }
+        ]
+    }
+        
+            // Adicione mais perguntas aqui
+        ];
+
+        const questions5 = [
+        {
+        question: 'O que a Lei 8080 diz sobre a pesquisa em saúde?',
+        answers: [
+            { text: 'Deve ser promovida pelo SUS', correct: true },
+            { text: 'É irrelevante', correct: false },
+            { text: 'Deve ser feita apenas por empresas privadas', correct: false },
+            { text: 'Deve ser limitada a grandes cidades', correct: false }
+        ]
+    },
+    {
+        question: 'O que é promovido pela Lei 8080 para melhorar a saúde da população?',
+        answers: [
+            { text: 'Educação em saúde', correct: true },
+            { text: 'Aumento de taxas', correct: false },
+            { text: 'Desinteresse pela saúde coletiva', correct: false },
+            { text: 'Atendimento exclusivo', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a relação entre saúde e meio ambiente na Lei 8080?',
+        answers: [
+            { text: 'Saúde é influenciada pelas condições ambientais', correct: true },
+            { text: 'Saúde e meio ambiente são irrelevantes', correct: false },
+            { text: 'O meio ambiente não afeta a saúde', correct: false },
+            { text: 'Não há relação entre os dois', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 estabelece a prioridade no atendimento à:',
+        answers: [
+            { text: 'População mais vulnerável', correct: true },
+            { text: 'População que pode pagar', correct: false },
+            { text: 'População que não trabalha', correct: false },
+            { text: 'População que não reside no país', correct: false }
+        ]
+    },
+    {
+        question: 'A integralidade da atenção à saúde significa:',
+        answers: [
+            { text: 'Cobertura completa dos serviços de saúde', correct: true },
+            { text: 'Apenas tratamento de doenças', correct: false },
+            { text: 'Serviços limitados a emergência', correct: false },
+            { text: 'Serviços de saúde apenas para ricos', correct: false }
+        ]
+    },
+    {
+        question: 'O que é considerado um direito fundamental na saúde?',
+        answers: [
+            { text: 'O acesso a medicamentos', correct: true },
+            { text: 'O pagamento de taxas', correct: false },
+            { text: 'O uso exclusivo de serviços privados', correct: false },
+            { text: 'O descaso com a saúde', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 prevê a promoção da saúde através de:',
+        answers: [
+            { text: 'Ações de prevenção e educação', correct: true },
+            { text: 'Corte de serviços', correct: false },
+            { text: 'Cobrança de taxas', correct: false },
+            { text: 'Atendimento exclusivo', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a importância do acesso à saúde na Lei 8080?',
+        answers: [
+            { text: 'É essencial para a dignidade humana', correct: true },
+            { text: 'É secundário', correct: false },
+            { text: 'Não é uma prioridade', correct: false },
+            { text: 'Deve ser restrito', correct: false }
+        ]
+    },
+    {
+        question: 'Os direitos dos usuários do SUS incluem:',
+        answers: [
+            { text: 'Receber atendimento de qualidade', correct: true },
+            { text: 'Pagar taxas elevadas', correct: false },
+            { text: 'Ser tratado com indiferença', correct: false },
+            { text: 'Ser excluído do atendimento', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 propõe a promoção de políticas públicas para:',
+        answers: [
+            { text: 'A saúde da população', correct: true },
+            { text: 'Apenas para os ricos', correct: false },
+            { text: 'Apenas para autoridades', correct: false },
+            { text: 'Exclusivamente para trabalhadores', correct: false }
+        ]
+    }
+        
+            // Adicione mais perguntas aqui
+        ];
+
+        const questions6 = [
+        {
+        question: 'Qual o papel da educação em saúde na Lei 8080?',
+        answers: [
+            { text: 'Fundamental para a prevenção de doenças', correct: true },
+            { text: 'Irrelevante', correct: false },
+            { text: 'Desnecessária', correct: false },
+            { text: 'Opcional', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde é vista como um direito:',
+        answers: [
+            { text: 'Universal', correct: true },
+            { text: 'Privado', correct: false },
+            { text: 'Exclusivo', correct: false },
+            { text: 'Secundário', correct: false }
+        ]
+    },
+    {
+        question: 'Os princípios do SUS são:',
+        answers: [
+            { text: 'Universalidade, integralidade e equidade', correct: true },
+            { text: 'Exclusividade e privatização', correct: false },
+            { text: 'Segregação e limitação', correct: false },
+            { text: 'Desinteresse e omissão', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 estabelece que a saúde deve ser promovida através de:',
+        answers: [
+            { text: 'Ações de promoção e prevenção', correct: true },
+            { text: 'Corte de serviços de saúde', correct: false },
+            { text: 'Atendimentos limitados', correct: false },
+            { text: 'Cobranças de taxas', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a função do controle social na saúde?',
+        answers: [
+            { text: 'Garantir a participação da população', correct: true },
+            { text: 'Limitar a participação', correct: false },
+            { text: 'Impor regras', correct: false },
+            { text: 'Ignorar a população', correct: false }
+        ]
+    },
+    {
+        question: 'A integralidade do cuidado em saúde envolve:',
+        answers: [
+            { text: 'Atenção integral a todas as dimensões da saúde', correct: true },
+            { text: 'Apenas o tratamento de doenças', correct: false },
+            { text: 'Serviços limitados a urgências', correct: false },
+            { text: 'Atendimentos em clínicas privadas', correct: false }
+        ]
+    },
+    {
+        question: 'O que deve ser garantido a todos os usuários do SUS?',
+        answers: [
+            { text: 'Acesso igualitário aos serviços de saúde', correct: true },
+            { text: 'Atendimento exclusivo para ricos', correct: false },
+            { text: 'Limitação no acesso', correct: false },
+            { text: 'Cobranças indevidas', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 propõe a articulação entre saúde e:',
+        answers: [
+            { text: 'Desenvolvimento social', correct: true },
+            { text: 'Interesses privados', correct: false },
+            { text: 'Setor exclusivo', correct: false },
+            { text: 'Limitação de serviços', correct: false }
+        ]
+    },
+    {
+        question: 'O que a Lei 8080 diz sobre a promoção da saúde da mulher?',
+        answers: [
+            { text: 'Deve ser priorizada', correct: true },
+            { text: 'Não é relevante', correct: false },
+            { text: 'É opcional', correct: false },
+            { text: 'Não deve ser abordada', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde deve ser considerada um direito:',
+        answers: [
+            { text: 'De todos', correct: true },
+            { text: 'De poucos', correct: false },
+            { text: 'Opcional', correct: false },
+            { text: 'Exclusivo', correct: false }
+        ]
+    }
+        
+            // Adicione mais perguntas aqui
+        ];
+
+        const questions7 = [
+        {
+        question: 'A Lei 8080 destaca a importância da participação da comunidade na:',
+        answers: [
+            { text: 'Gestão do SUS', correct: true },
+            { text: 'Privatização dos serviços', correct: false },
+            { text: 'Limitação do acesso', correct: false },
+            { text: 'Cobrança de taxas', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde é considerada um direito humano:',
+        answers: [
+            { text: 'Fundamental', correct: true },
+            { text: 'Irrelevante', correct: false },
+            { text: 'Secundário', correct: false },
+            { text: 'Opcional', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a relação entre saúde e educação na Lei 8080?',
+        answers: [
+            { text: 'A educação é fundamental para a promoção da saúde', correct: true },
+            { text: 'A educação é secundária', correct: false },
+            { text: 'Não há relação entre saúde e educação', correct: false },
+            { text: 'A educação deve ser ignorada', correct: false }
+        ]
+    },
+    {
+        question: 'O que a Lei 8080 diz sobre a prevenção de doenças?',
+        answers: [
+            { text: 'Deve ser priorizada', correct: true },
+            { text: 'Não é relevante', correct: false },
+            { text: 'É opcional', correct: false },
+            { text: 'Deve ser ignorada', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 estabelece que o sistema de saúde deve ser:',
+        answers: [
+            { text: 'Descentralizado', correct: true },
+            { text: 'Centralizado', correct: false },
+            { text: 'Privatizado', correct: false },
+            { text: 'Omissão', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a importância da vigilância em saúde na Lei 8080?',
+        answers: [
+            { text: 'É essencial para a proteção da saúde da população', correct: true },
+            { text: 'É irrelevante', correct: false },
+            { text: 'Deve ser ignorada', correct: false },
+            { text: 'É opcional', correct: false }
+        ]
+    },
+    {
+        question: 'O que a Lei 8080 diz sobre a promoção da saúde infantil?',
+        answers: [
+            { text: 'Deve ser priorizada', correct: true },
+            { text: 'Não é relevante', correct: false },
+            { text: 'É opcional', correct: false },
+            { text: 'Não deve ser abordada', correct: false }
+        ]
+    },
+    {
+        question: 'A integralidade do cuidado em saúde refere-se a:',
+        answers: [
+            { text: 'Abrangência de todos os aspectos da saúde', correct: true },
+            { text: 'Apenas o tratamento de doenças', correct: false },
+            { text: 'Serviços limitados a urgências', correct: false },
+            { text: 'Atendimentos em clínicas privadas', correct: false }
+        ]
+    },
+    {
+        question: 'O que é considerado um direito fundamental na saúde?',
+        answers: [
+            { text: 'O acesso à saúde de qualidade', correct: true },
+            { text: 'O pagamento de taxas', correct: false },
+            { text: 'O uso exclusivo de serviços privados', correct: false },
+            { text: 'O descaso com a saúde', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde é considerada um bem:',
+        answers: [
+            { text: 'Coletivo', correct: true },
+            { text: 'Individual', correct: false },
+            { text: 'Privado', correct: false },
+            { text: 'Exclusivo', correct: false }
+        ]
+    }
+        
+            // Adicione mais perguntas aqui
+        ];
+
+        const questions8 = [
+        {
+        question: 'Qual a relação entre saúde e segurança alimentar na Lei 8080?',
+        answers: [
+            { text: 'A segurança alimentar é fundamental para a saúde', correct: true },
+            { text: 'A segurança alimentar é irrelevante', correct: false },
+            { text: 'Não há relação entre saúde e segurança alimentar', correct: false },
+            { text: 'A segurança alimentar deve ser ignorada', correct: false }
+        ]
+    },
+    {
+        question: 'Qual o objetivo da Lei 8080?',
+        answers: [
+            { text: 'Garantir o acesso universal e igualitário à saúde', correct: true },
+            { text: 'Promover a privatização da saúde', correct: false },
+            { text: 'Limitar o acesso à saúde', correct: false },
+            { text: 'Negligenciar a saúde', correct: false }
+        ]
+    },
+    {
+        question: 'O que a Lei 8080 diz sobre a saúde mental?',
+        answers: [
+            { text: 'Deve ser abordada e promovida', correct: true },
+            { text: 'Não é relevante', correct: false },
+            { text: 'É opcional', correct: false },
+            { text: 'Não deve ser discutida', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde deve ser promovida por meio de:',
+        answers: [
+            { text: 'Políticas intersetoriais', correct: true },
+            { text: 'Serviços exclusivos', correct: false },
+            { text: 'Limitações de acesso', correct: false },
+            { text: 'Cobranças de taxas', correct: false }
+        ]
+    },
+    {
+        question: 'A Lei 8080 estabelece que a saúde é:',
+        answers: [
+            { text: 'Um direito de todos os cidadãos', correct: true },
+            { text: 'Um privilégio', correct: false },
+            { text: 'Opcional', correct: false },
+            { text: 'Exclusivo', correct: false }
+        ]
+    },
+    {
+        question: 'Qual o papel da família na promoção da saúde?',
+        answers: [
+            { text: 'É fundamental para o cuidado e prevenção', correct: true },
+            { text: 'É irrelevante', correct: false },
+            { text: 'Não é necessário', correct: false },
+            { text: 'Deve ser ignorado', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde deve ser vista como um direito:',
+        answers: [
+            { text: 'Coletivo', correct: true },
+            { text: 'Individual', correct: false },
+            { text: 'Privado', correct: false },
+            { text: 'Exclusivo', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a relação entre saúde e meio ambiente na Lei 8080?',
+        answers: [
+            { text: 'A proteção do meio ambiente é fundamental para a saúde', correct: true },
+            { text: 'O meio ambiente é irrelevante', correct: false },
+            { text: 'Não há relação entre saúde e meio ambiente', correct: false },
+            { text: 'A proteção do meio ambiente deve ser ignorada', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde deve ser promovida por meio de:',
+        answers: [
+            { text: 'Programas de saúde pública', correct: true },
+            { text: 'Cobranças de taxas', correct: false },
+            { text: 'Limitações de acesso', correct: false },
+            { text: 'Serviços exclusivos', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a importância da promoção da saúde na Lei 8080?',
+        answers: [
+            { text: 'É fundamental para garantir o bem-estar da população', correct: true },
+            { text: 'É irrelevante', correct: false },
+            { text: 'Deve ser ignorada', correct: false },
+            { text: 'É opcional', correct: false }
+        ]
+    }
+        
+            // Adicione mais perguntas aqui
+        ];
+
+        const questions9 = [
+        {
+        question: 'Qual a relação entre saúde e desenvolvimento social na Lei 8080?',
+        answers: [
+            { text: 'A saúde é essencial para o desenvolvimento social', correct: true },
+            { text: 'A saúde é secundária', correct: false },
+            { text: 'Não há relação entre saúde e desenvolvimento social', correct: false },
+            { text: 'A saúde deve ser ignorada', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a função da atenção primária na saúde?',
+        answers: [
+            { text: 'Ser a porta de entrada do sistema de saúde', correct: true },
+            { text: 'Ser uma opção secundária', correct: false },
+            { text: 'Limitar o acesso', correct: false },
+            { text: 'Privatizar os serviços', correct: false }
+        ]
+    },
+    {
+        question: 'A promoção da saúde envolve:',
+        answers: [
+            { text: 'Ações de prevenção e promoção do bem-estar', correct: true },
+            { text: 'Apenas tratamento de doenças', correct: false },
+            { text: 'Limitações no acesso', correct: false },
+            { text: 'Serviços privados', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde é considerada um bem:',
+        answers: [
+            { text: 'Público', correct: true },
+            { text: 'Privado', correct: false },
+            { text: 'Individual', correct: false },
+            { text: 'Exclusivo', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde deve ser promovida por meio de:',
+        answers: [
+            { text: 'Integração de serviços', correct: true },
+            { text: 'Exclusão de serviços', correct: false },
+            { text: 'Limitações de acesso', correct: false },
+            { text: 'Cobranças de taxas', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a importância do controle social na saúde?',
+        answers: [
+            { text: 'É fundamental para a transparência e participação da população', correct: true },
+            { text: 'É irrelevante', correct: false },
+            { text: 'Deve ser ignorado', correct: false },
+            { text: 'É opcional', correct: false }
+        ]
+    },
+    {
+        question: 'O que a Lei 8080 diz sobre a promoção da saúde da população?',
+        answers: [
+            { text: 'Deve ser priorizada', correct: true },
+            { text: 'Não é relevante', correct: false },
+            { text: 'É opcional', correct: false },
+            { text: 'Não deve ser abordada', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde deve ser promovida por meio de:',
+        answers: [
+            { text: 'Educação em saúde', correct: true },
+            { text: 'Exclusão de serviços', correct: false },
+            { text: 'Limitações de acesso', correct: false },
+            { text: 'Cobranças de taxas', correct: false }
+        ]
+    },
+    {
+        question: 'A integralidade do cuidado em saúde significa:',
+        answers: [
+            { text: 'Atenção a todas as necessidades do paciente', correct: true },
+            { text: 'Apenas tratamento de doenças', correct: false },
+            { text: 'Limitações nos atendimentos', correct: false },
+            { text: 'Serviços privados', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde deve ser promovida com foco em:',
+        answers: [
+            { text: 'Qualidade de vida e bem-estar', correct: true },
+            { text: 'Apenas tratamento de doenças', correct: false },
+            { text: 'Exclusão de serviços', correct: false },
+            { text: 'Cobranças de taxas', correct: false }
+        ]
+    }
+        
+            // Adicione mais perguntas aqui
+        ];
+
+        const questions10 = [
+        {
+        question: 'A saúde deve ser considerada um direito:',
+        answers: [
+            { text: 'Coletivo e universal', correct: true },
+            { text: 'Individual e exclusivo', correct: false },
+            { text: 'Opcional', correct: false },
+            { text: 'Secundário', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a função do sistema de saúde na promoção da saúde?',
+        answers: [
+            { text: 'Garantir o acesso e a qualidade dos serviços', correct: true },
+            { text: 'Limitar o acesso', correct: false },
+            { text: 'Negligenciar a saúde', correct: false },
+            { text: 'Privatizar os serviços', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde deve ser promovida através de:',
+        answers: [
+            { text: 'Educação e informação', correct: true },
+            { text: 'Cobranças de taxas', correct: false },
+            { text: 'Limitações de acesso', correct: false },
+            { text: 'Serviços exclusivos', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde é considerada um bem:',
+        answers: [
+            { text: 'Comum', correct: true },
+            { text: 'Privado', correct: false },
+            { text: 'Individual', correct: false },
+            { text: 'Exclusivo', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a importância da prevenção de doenças na saúde?',
+        answers: [
+            { text: 'É fundamental para a qualidade de vida', correct: true },
+            { text: 'É irrelevante', correct: false },
+            { text: 'Deve ser ignorada', correct: false },
+            { text: 'É opcional', correct: false }
+        ]
+    },
+    {
+        question: 'A promoção da saúde deve considerar:',
+        answers: [
+            { text: 'Os determinantes sociais da saúde', correct: true },
+            { text: 'Apenas aspectos clínicos', correct: false },
+            { text: 'Limitações no acesso', correct: false },
+            { text: 'Serviços privados', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a relação entre saúde e educação na Lei 8080?',
+        answers: [
+            { text: 'A educação é fundamental para a promoção da saúde', correct: true },
+            { text: 'A educação é irrelevante', correct: false },
+            { text: 'Não há relação entre saúde e educação', correct: false },
+            { text: 'A educação deve ser ignorada', correct: false }
+        ]
+    },
+    {
+        question: 'A promoção da saúde envolve:',
+        answers: [
+            { text: 'Ações coletivas e comunitárias', correct: true },
+            { text: 'Apenas tratamento individual', correct: false },
+            { text: 'Limitações de acesso', correct: false },
+            { text: 'Serviços privados', correct: false }
+        ]
+    },
+    {
+        question: 'A saúde é um direito:',
+        answers: [
+            { text: 'Universal', correct: true },
+            { text: 'Opcional', correct: false },
+            { text: 'Privado', correct: false },
+            { text: 'Exclusivo', correct: false }
+        ]
+    },
+    {
+        question: 'Qual a função da vigilância em saúde?',
+        answers: [
+            { text: 'Monitorar e prevenir riscos à saúde', correct: true },
+            { text: 'Limitar o acesso', correct: false },
+            { text: 'Negligenciar a saúde', correct: false },
+            { text: 'Privatizar os serviços', correct: false }
+        ]
+    }
+        
+            // Adicione mais perguntas aqui
+        ];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz(questions) {
+            currentQuestionIndex = 0;
+            shuffleArray(questions); // Embaralha as perguntas
+            questions.forEach(q => shuffleArray(q.answers)); // Embaralha as respostas de cada pergunta
+            userAnswers.length = 0;
+            showQuestion(questions);
+        }
+
+        function showQuestion(questions) {
+            const questionObj = questions[currentQuestionIndex];
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = `
+                <div class="question">${questionObj.question}</div>
+                ${questionObj.answers.map((answer, index) => `
+                    <div class="answer" onclick="checkAnswer(this, ${answer.correct}, '${answer.text}')">${answer.text}</div>
+                `).join('')}
+            `;
+            document.querySelector('.next-button').disabled = true;
+        }
+
+        function checkAnswer(element, correct, answerText) {
+            const answers = document.querySelectorAll('.answer');
+            answers.forEach(answer => answer.style.pointerEvents = 'none'); // Desabilita cliques
+            element.classList.add(correct ? 'correct' : 'incorrect');
+            userAnswers.push({ correct, answerText }); // Armazena a resposta
+            document.querySelector('.next-button').disabled = false; // Habilita botão
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions1.length) {
+                showQuestion(questions1);
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const quizContainer = document.getElementById('quiz-container');
+            const correctAnswersCount = userAnswers.filter(answer => answer.correct).length;
+            quizContainer.innerHTML = `
+                <h2>Resultados</h2>
+                <p>Você acertou ${correctAnswersCount} de ${userAnswers.length} perguntas!</p>
+                <ul>
+                    ${userAnswers.map((answer, index) => `
+                        <li>${index + 1}: ${answer.answerText} - ${answer.correct ? 'Correto' : 'Incorreto'}</li>
+                    `).join('')}
+                </ul>
+                <button class="back-button" onclick="backToMenu()">Voltar ao Menu</button>
+            `;
+        }
+
+        function backToMenu() {
+            document.getElementById('gamesMenu').style.display = 'flex';
+            document.getElementById('gameContent').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
